@@ -1,38 +1,57 @@
 import React from 'react';
-import { FiChevronsRight } from 'react-icons/fi';
+import { FiChevronsRight, FiActivity, FiLock } from 'react-icons/fi';
+import { Form } from '@unform/web';
 
-import { Background, Container, Header, Form, CreateAccount } from './styles';
+import Input from '../../components/Input';
+import Button from '../../components/Button';
 
-const LogIn: React.FC = () => (
-  <>
-    <Container>
-      <Header>
-        <h1>Plantone</h1>
-        <h2>Um controle de plantões hospitalares simples e eficiente.</h2>
-      </Header>
+import { Background, Container, Header } from './styles';
 
-      <Form>
-        <h2>Faça seu login</h2>
+const LogIn: React.FC = () => {
+  function handleSubmit(data: object): void {
+    console.log(data);
+  }
 
-        <h4>Email</h4>
-        <input placeholder="Digite seu nome" />
+  return (
+    <>
+      <Container>
+        <Header>
+          <h1>Plantone</h1>
+          <h2>Um controle de plantões hospitalares simples e eficiente.</h2>
+        </Header>
 
-        <h4>Senha</h4>
-        <input type="password" placeholder="Digite sua senha" />
+        <Form onSubmit={handleSubmit}>
+          <h2>Faça seu login</h2>
 
-        <button type="submit">Entrar</button>
+          <h4>Email</h4>
+          <Input
+            name="email"
+            icon={FiActivity}
+            placeholder="Digite seu email"
+          />
 
-        <a href="forgot-password">Esqueceu a senha?</a>
-      </Form>
+          <h4>Senha</h4>
+          <Input
+            name="password"
+            icon={FiLock}
+            type="password"
+            placeholder="Digite sua senha"
+          />
 
-      <CreateAccount>
-        <FiChevronsRight size={24} />
-        <a href="create-accont">Cadastre-se</a>
-      </CreateAccount>
-    </Container>
+          <Button type="submit">Entrar</Button>
 
-    <Background />
-  </>
-);
+          <a href="forgot-password">Esqueceu a senha?</a>
+
+          <a href="create-account">
+            <FiChevronsRight size={24} />
+            Cadastre-se
+          </a>
+        </Form>
+      </Container>
+
+      <Background />
+    </>
+  );
+};
 
 export default LogIn;
