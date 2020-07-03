@@ -42,7 +42,7 @@ const LogIn: React.FC = () => {
 
           <a href="forgot-password">Esqueceu a senha?</a>
 
-          <a href="create-account">
+          <a href="/choose-login">
             <FiChevronsRight size={24} />
             Cadastre-se
           </a>
