@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiChevronsRight, FiActivity, FiLock } from 'react-icons/fi';
+import { FiChevronsRight, FiMail, FiLock } from 'react-icons/fi';
 import { Form } from '@unform/web';
 
 import Input from '../../components/Input';
@@ -24,11 +24,7 @@ const LogIn: React.FC = () => {
           <h2>Faça seu login</h2>
 
           <h4>Email</h4>
-          <Input
-            name="email"
-            icon={FiActivity}
-            placeholder="Digite seu email"
-          />
+          <Input name="email" icon={FiMail} placeholder="Digite seu email" />
 
           <h4>Senha</h4>
           <Input
@@ -42,7 +38,7 @@ const LogIn: React.FC = () => {
 
           <a href="forgot-password">Esqueceu a senha?</a>
 
-          <a href="/choose-login">
+          <a href="/choose-register">
             <FiChevronsRight size={24} />
             Cadastre-se
           </a>

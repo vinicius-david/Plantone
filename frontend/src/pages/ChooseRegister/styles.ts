@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { shade } from 'polished';
 
 import doctorImage from '../../assets/doctor-icon.png';
 import hospitalImage from '../../assets/hospital-icon.png';
@@ -27,15 +28,18 @@ export const Header = styled.div`
 
     color: #002844;
     font-size: 18px;
+
+    width: 5%;
   }
 
   a:hover {
+    color: ${shade(0.2, '#002844')};
     font-weight: 500;
   }
 
   h1 {
     font-size: 56px;
-    margin-left: 20%;
+    margin-left: 21%;
   }
 `;
 
@@ -58,8 +62,21 @@ export const OptionContainer = styled.div`
       transform: translateY(-3px);
     }
 
-    button {
+    a {
+      text-decoration: none;
+      text-align: center;
+      font-weight: 500;
+      color: #fff;
+      background: #4488aa;
+
       width: 360px;
+      padding: 16px 32px;
+      border-radius: 8px;
+
+      &:hover {
+        transition: 300ms;
+        background: ${shade(0.2, '#4488aa')};
+      }
     }
 
     h3 {

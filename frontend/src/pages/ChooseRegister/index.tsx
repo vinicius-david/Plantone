@@ -1,8 +1,6 @@
 import React from 'react';
 import { FiChevronsLeft } from 'react-icons/fi';
 
-import Button from '../../components/Button';
-
 import {
   Container,
   Header,
@@ -11,7 +9,7 @@ import {
   HospitalImage,
 } from './styles';
 
-const ChooseLogIn: React.FC = () => {
+const ChooseRegister: React.FC = () => {
   return (
     <Container>
       <Header>
@@ -26,7 +24,7 @@ const ChooseLogIn: React.FC = () => {
       <OptionContainer>
         <div>
           <DoctorImage />
-          <Button>Cadastrar como médico</Button>
+          <a href="/doctor-register">Cadastrar como médico</a>
           <h3>
             Como médico, é possível ver todos os hospitais com plantões
             disponíveis e reservar um trabalho.
@@ -35,7 +33,7 @@ const ChooseLogIn: React.FC = () => {
 
         <div>
           <HospitalImage />
-          <Button>Cadastrar como hospital</Button>
+          <a href="/hospital-register">Cadastrar como hospital</a>
           <h3>
             Como hospital, é possível abrir vagas para plantões em datas
             específicas para cada especialidade.
@@ -46,4 +44,4 @@ const ChooseLogIn: React.FC = () => {
   );
 };
 
-export default ChooseLogIn;
+export default ChooseRegister;
