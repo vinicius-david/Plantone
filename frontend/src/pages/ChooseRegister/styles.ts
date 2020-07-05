@@ -1,8 +1,17 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { shade } from 'polished';
 
 import doctorImage from '../../assets/doctor-icon.png';
 import hospitalImage from '../../assets/hospital-icon.png';
+
+const animateOpacity = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
 
 export const Container = styled.div`
   display: flex;
@@ -48,6 +57,8 @@ export const OptionContainer = styled.div`
   flex-direction: row;
 
   justify-content: space-around;
+
+  animation: ${animateOpacity} 1s;
 
   div {
     display: flex;

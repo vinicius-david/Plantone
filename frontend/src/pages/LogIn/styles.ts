@@ -1,6 +1,26 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import logInBackground from '../../assets/login-background.png';
+
+const animateOpacity = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const animateFromLeft = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+`;
 
 export const Container = styled.div`
   width: 20%;
@@ -12,6 +32,8 @@ export const Container = styled.div`
 
   display: flex;
   flex-direction: column;
+
+  animation: ${animateOpacity} 1.3s;
 
   form {
     display: flex;
@@ -74,4 +96,6 @@ export const Background = styled.div`
 
   background: url(${logInBackground}) no-repeat center;
   background-size: cover;
+
+  animation: ${animateFromLeft} 0.8s;
 `;

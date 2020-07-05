@@ -1,5 +1,14 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { shade } from 'polished';
+
+const animateOpacity = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
 
 export const Container = styled.div`
   display: flex;
@@ -46,6 +55,8 @@ export const InputsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: left;
+
+  animation: ${animateOpacity} 0.8s;
 
   form {
     h4 {

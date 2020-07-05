@@ -1,5 +1,14 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { shade } from 'polished';
+
+const animateOpacity = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
 
 export const Container = styled.div`
   display: flex;
@@ -45,6 +54,8 @@ export const FormContainer = styled.div`
   width: 40vw;
   margin-top: 16px;
 
+  animation: ${animateOpacity} 0.8s;
+
   form {
     display: flex;
     flex-direction: column;
@@ -62,6 +73,16 @@ export const FormContainer = styled.div`
     div {
       margin-right: 24px;
       max-width: 300px;
+    }
+
+    select {
+      background: #fff;
+      color: #777;
+
+      max-width: 300px;
+      height: 54px;
+      padding: 8px;
+      border-radius: 8px;
     }
 
     button {

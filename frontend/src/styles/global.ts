@@ -13,7 +13,7 @@ export default createGlobalStyle`
     color: #002844;
   }
 
-  body, input, button {
+  body, input, button, select {
     font-family: 'Ubuntu', serif;
     font-size: 16px;
   }

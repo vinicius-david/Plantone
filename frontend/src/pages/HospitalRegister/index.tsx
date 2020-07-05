@@ -1,21 +1,71 @@
-import React from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import {
   FiChevronsLeft,
   FiUser,
   FiMail,
   FiPhone,
   FiActivity,
-  FiMap,
-  FiCloud,
   FiAnchor,
 } from 'react-icons/fi';
 import { Form } from '@unform/web';
+import axios from 'axios';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { Container, Header, FormContainer } from './styles';
 
+interface IBGEUF {
+  sigla: string;
+}
+
+interface IBGECity {
+  nome: string;
+}
+
 const HospitalRegister: React.FC = () => {
+  const [ufs, setUfs] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+  const [selectedUf, setSelectedUf] = useState<string>('0');
+  const [selectedCity, setSelectedCity] = useState<string>('0');
+
+  useEffect(() => {
+    axios
+      .get<IBGEUF[]>(
+        'https://servicodados.ibge.gov.br/api/v1/localidades/estados',
+      )
+      .then(response => {
+        const ufsInitials = response.data.map(uf => uf.sigla);
+
+        setUfs(ufsInitials);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (selectedUf === '0') setCities([]);
+
+    axios
+      .get<IBGECity[]>(
+        `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`,
+      )
+      .then(response => {
+        const ufCities = response.data.map(city => city.nome);
+
+        setCities(ufCities);
+      });
+  }, [selectedUf]);
+
+  function handleSelectUf(event: ChangeEvent<HTMLSelectElement>) {
+    const ufSelection = event.target.value;
+
+    setSelectedUf(ufSelection);
+  }
+
+  function handleSelectCity(event: ChangeEvent<HTMLSelectElement>) {
+    const citySelection = event.target.value;
+
+    setSelectedCity(citySelection);
+  }
+
   function handleSubmit(data: object): void {
     console.log(data);
   }
@@ -58,10 +108,36 @@ const HospitalRegister: React.FC = () => {
           />
 
           <h4>Estado</h4>
-          <Input name="uf" placeholder="Escolha a UF" icon={FiMap} />
+
+          <select
+            name="uf"
+            id="uf"
+            onChange={handleSelectUf}
+            value={selectedUf}
+          >
+            <option value="0">Selecione um estado</option>
+            {ufs.map(uf => (
+              <option key={uf} value={uf}>
+                {uf}
+              </option>
+            ))}
+          </select>
 
           <h4>Cidade</h4>
-          <Input name="city" placeholder="Escolha a cidade" icon={FiCloud} />
+
+          <select
+            name="city"
+            id="city"
+            onChange={handleSelectCity}
+            value={selectedCity}
+          >
+            <option value="0">Selecione uma cidade</option>
+            {cities.map(city => (
+              <option key={city} value={city}>
+                {city}
+              </option>
+            ))}
+          </select>
 
           <h4>Endereço</h4>
           <Input
