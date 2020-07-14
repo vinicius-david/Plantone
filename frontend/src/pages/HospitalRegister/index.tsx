@@ -1,4 +1,10 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, {
+  useState,
+  useEffect,
+  ChangeEvent,
+  useCallback,
+  useRef,
+} from 'react';
 import {
   FiChevronsLeft,
   FiUser,
@@ -8,11 +14,15 @@ import {
   FiAnchor,
 } from 'react-icons/fi';
 import { Form } from '@unform/web';
+import { FormHandles } from '@unform/core';
+import * as Yup from 'yup';
 import axios from 'axios';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import { Container, Header, FormContainer } from './styles';
+import getValidationErrors from '../../utils/getValidationErrors';
+
+import { Container, Header, FormContainer, Select } from './styles';
 
 interface IBGEUF {
   sigla: string;
@@ -22,11 +32,23 @@ interface IBGECity {
   nome: string;
 }
 
+interface HospitalRegisterFormData {
+  name: string;
+  email: string;
+  phone: string;
+  specialties: string;
+  adress: string;
+}
+
 const HospitalRegister: React.FC = () => {
+  const formRef = useRef<FormHandles>(null);
+
   const [ufs, setUfs] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
   const [selectedUf, setSelectedUf] = useState<string>('0');
   const [selectedCity, setSelectedCity] = useState<string>('0');
+  const [ufError, setUfError] = useState(false);
+  const [cityError, setCityError] = useState(false);
 
   useEffect(() => {
     axios
@@ -66,9 +88,46 @@ const HospitalRegister: React.FC = () => {
     setSelectedCity(citySelection);
   }
 
-  function handleSubmit(data: object): void {
-    console.log(data);
-  }
+  const handleSubmit = useCallback(
+    async (data: HospitalRegisterFormData) => {
+      try {
+        formRef.current?.setErrors({});
+        setUfError(false);
+        setCityError(false);
+
+        if (selectedUf === '0') setUfError(true);
+        if (selectedCity === '0') setCityError(true);
+
+        const location = {
+          uf: selectedUf,
+          city: selectedCity,
+        };
+
+        Object.assign(data, location);
+
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Campo obrigatório'),
+          email: Yup.string()
+            .email('Email inválido')
+            .required('Campo obrigatório'),
+          phone: Yup.string().required('Campo obrigatório'),
+          specialties: Yup.string().required('Campo obrigatório'),
+          adress: Yup.string().required('Campo obrigatório'),
+          uf: Yup.string().min(2),
+          city: Yup.string().min(2),
+        });
+
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+      } catch (err) {
+        const errors = getValidationErrors(err);
+
+        formRef.current?.setErrors(errors);
+      }
+    },
+    [selectedUf, selectedCity],
+  );
 
   return (
     <Container>
@@ -82,7 +141,7 @@ const HospitalRegister: React.FC = () => {
       </Header>
 
       <FormContainer>
-        <Form onSubmit={handleSubmit}>
+        <Form ref={formRef} onSubmit={handleSubmit}>
           <h4>Nome</h4>
           <Input
             name="name"
@@ -102,18 +161,19 @@ const HospitalRegister: React.FC = () => {
 
           <h4>Especialidades</h4>
           <Input
-            name="areas"
-            placeholder="Digite as especialidades atendidas"
+            name="specialties"
+            placeholder="Especialidades atendidas"
             icon={FiActivity}
           />
 
           <h4>Estado</h4>
 
-          <select
+          <Select
             name="uf"
             id="uf"
             onChange={handleSelectUf}
             value={selectedUf}
+            hasError={ufError}
           >
             <option value="0">Selecione um estado</option>
             {ufs.map(uf => (
@@ -121,15 +181,16 @@ const HospitalRegister: React.FC = () => {
                 {uf}
               </option>
             ))}
-          </select>
+          </Select>
 
           <h4>Cidade</h4>
 
-          <select
+          <Select
             name="city"
             id="city"
             onChange={handleSelectCity}
             value={selectedCity}
+            hasError={cityError}
           >
             <option value="0">Selecione uma cidade</option>
             {cities.map(city => (
@@ -137,7 +198,7 @@ const HospitalRegister: React.FC = () => {
                 {city}
               </option>
             ))}
-          </select>
+          </Select>
 
           <h4>Endereço</h4>
           <Input

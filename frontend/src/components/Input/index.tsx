@@ -7,8 +7,9 @@ import React, {
 } from 'react';
 import { IconBaseProps } from 'react-icons';
 import { useField } from '@unform/core';
+import { FiAlertTriangle } from 'react-icons/fi';
 
-import { Container } from './styles';
+import { Container, Error } from './styles';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
@@ -19,7 +20,7 @@ const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
-  const { defaultValue, fieldName, registerField } = useField(name);
+  const { defaultValue, fieldName, error, registerField } = useField(name);
 
   useEffect(() => {
     registerField({
@@ -40,7 +41,7 @@ const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
   }, []);
 
   return (
-    <Container isFocused={isFocused} isFilled={isFilled}>
+    <Container isErrored={!!error} isFocused={isFocused} isFilled={isFilled}>
       {Icon && <Icon size={20} />}
       <input
         onFocus={handleInputFocus}
@@ -49,6 +50,12 @@ const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
         ref={inputRef}
         {...rest}
       />
+
+      {error && (
+        <Error title={error}>
+          <FiAlertTriangle size={18} color="#c53030" />
+        </Error>
+      )}
     </Container>
   );
 };

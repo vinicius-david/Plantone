@@ -1,5 +1,9 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { shade } from 'polished';
+
+interface SelectProps {
+  hasError: boolean;
+}
 
 const animateOpacity = keyframes`
   from {
@@ -26,6 +30,8 @@ export const Header = styled.div`
   display: flex;
   align-items: center;
 
+  margin-bottom: 24px;
+
   a {
     display: flex;
     align-items: center;
@@ -46,13 +52,13 @@ export const Header = styled.div`
 
   h1 {
     font-size: 56px;
-    margin-left: 20%;
+    margin-left: 22%;
   }
 `;
 
 export const FormContainer = styled.div`
-  width: 40vw;
-  margin-top: 16px;
+  width: 740px;
+  max-height: 700px;
 
   animation: ${animateOpacity} 0.8s;
 
@@ -61,17 +67,19 @@ export const FormContainer = styled.div`
     flex-direction: column;
     flex-wrap: wrap;
 
-    height: 55%;
-    width: 40vw;
+    height: 60%;
+    width: 740px;
+
+    margin-top: 32px;
 
     h4 {
       font-size: 22px;
       margin-bottom: 8px;
-      margin-top: 8px;
+      margin-top: 16px;
+      max-width: 370px;
     }
 
     div {
-      margin-right: 24px;
       max-width: 300px;
     }
 
@@ -80,14 +88,22 @@ export const FormContainer = styled.div`
       color: #777;
 
       max-width: 300px;
+      border-radius: 8px;
       height: 54px;
       padding: 8px;
-      border-radius: 8px;
     }
 
     button {
       max-width: 300px;
-      margin-top: 44px;
+      margin-top: 56px;
     }
   }
+`;
+
+export const Select = styled.select<SelectProps>`
+  ${props =>
+    props.hasError &&
+    css`
+      border: 2px solid ${shade(0.2, '#c53030')};
+    `}
 `;

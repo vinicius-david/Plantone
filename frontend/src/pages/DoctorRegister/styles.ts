@@ -26,6 +26,8 @@ export const Header = styled.div`
   display: flex;
   align-items: center;
 
+  margin-bottom: 24px;
+
   a {
     display: flex;
     align-items: center;
@@ -62,10 +64,11 @@ export const InputsContainer = styled.div`
     h4 {
       font-size: 22px;
       margin-bottom: 8px;
+      margin-top: 24px;
     }
 
-    div {
-      margin-bottom: 16px;
+    button {
+      margin-top: 24px;
     }
   }
 `;
