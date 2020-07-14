@@ -52,7 +52,7 @@ export const Header = styled.div`
 
   h1 {
     font-size: 56px;
-    margin-left: 22%;
+    margin-left: 21%;
   }
 `;
 
@@ -67,7 +67,7 @@ export const FormContainer = styled.div`
     flex-direction: column;
     flex-wrap: wrap;
 
-    height: 60%;
+    height: 80%;
     width: 740px;
 
     margin-top: 32px;

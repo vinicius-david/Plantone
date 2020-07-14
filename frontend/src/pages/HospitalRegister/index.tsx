@@ -9,11 +9,13 @@ import {
   FiChevronsLeft,
   FiUser,
   FiMail,
+  FiLock,
   FiPhone,
   FiActivity,
-  FiAnchor,
+  FiMap,
 } from 'react-icons/fi';
 import { Form } from '@unform/web';
+import { Link } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import axios from 'axios';
@@ -35,6 +37,8 @@ interface IBGECity {
 interface HospitalRegisterFormData {
   name: string;
   email: string;
+  password: string;
+  password_confirmation: string;
   phone: string;
   specialties: string;
   adress: string;
@@ -110,6 +114,11 @@ const HospitalRegister: React.FC = () => {
           email: Yup.string()
             .email('Email inválido')
             .required('Campo obrigatório'),
+          password: Yup.string().required('Campo obrigatório'),
+          password_confirmation: Yup.string().oneOf(
+            [Yup.ref('password'), undefined],
+            'Senhas diferentes',
+          ),
           phone: Yup.string().required('Campo obrigatório'),
           specialties: Yup.string().required('Campo obrigatório'),
           adress: Yup.string().required('Campo obrigatório'),
@@ -132,10 +141,10 @@ const HospitalRegister: React.FC = () => {
   return (
     <Container>
       <Header>
-        <a href="/choose-register">
+        <Link to="/choose-register">
           <FiChevronsLeft size={32} />
           Voltar
-        </a>
+        </Link>
 
         <h1>Cadastrar como hospital</h1>
       </Header>
@@ -151,6 +160,22 @@ const HospitalRegister: React.FC = () => {
 
           <h4>Email</h4>
           <Input name="email" placeholder="Digite seu email" icon={FiMail} />
+
+          <h4>Senha</h4>
+          <Input
+            name="password"
+            type="password"
+            placeholder="Escolha uma senha"
+            icon={FiLock}
+          />
+
+          <h4>Confirmar senha</h4>
+          <Input
+            name="password_confirmation"
+            type="password"
+            placeholder="Confirme a senha"
+            icon={FiLock}
+          />
 
           <h4>Telefone</h4>
           <Input
@@ -204,7 +229,7 @@ const HospitalRegister: React.FC = () => {
           <Input
             name="adress"
             placeholder="Digite o endereço completo"
-            icon={FiAnchor}
+            icon={FiMap}
           />
 
           <Button type="submit">Cadastrar</Button>

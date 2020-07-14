@@ -3,9 +3,11 @@ import {
   FiChevronsLeft,
   FiUser,
   FiMail,
+  FiLock,
   FiPhone,
   FiActivity,
 } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
@@ -19,6 +21,8 @@ import { Container, Header, InputsContainer } from './styles';
 interface DoctorRegisterFormData {
   name: string;
   email: string;
+  password: string;
+  password_confirmation: string;
   phone: string;
   specialty: string;
 }
@@ -35,6 +39,11 @@ const DoctorRegister: React.FC = () => {
         email: Yup.string()
           .email('Email inválido')
           .required('Campo obrigatório'),
+        password: Yup.string().required('Campo obrigatório'),
+        password_confirmation: Yup.string().oneOf(
+          [Yup.ref('password'), undefined],
+          'Senhas diferentes',
+        ),
         phone: Yup.string().required('Campo obrigatório'),
         specialty: Yup.string().required('Campo obrigatório'),
       });
@@ -52,10 +61,10 @@ const DoctorRegister: React.FC = () => {
   return (
     <Container>
       <Header>
-        <a href="/choose-register">
+        <Link to="/choose-register">
           <FiChevronsLeft size={32} />
           Voltar
-        </a>
+        </Link>
 
         <h1>Cadastrar como médico</h1>
       </Header>
@@ -67,6 +76,22 @@ const DoctorRegister: React.FC = () => {
 
           <h4>Email</h4>
           <Input name="email" placeholder="Digite seu email" icon={FiMail} />
+
+          <h4>Senha</h4>
+          <Input
+            name="password"
+            type="password"
+            placeholder="Escolha uma senha"
+            icon={FiLock}
+          />
+
+          <h4>Confirmar senha</h4>
+          <Input
+            name="password_confirmation"
+            type="password"
+            placeholder="Confirme a senha"
+            icon={FiLock}
+          />
 
           <h4>Telefone</h4>
           <Input

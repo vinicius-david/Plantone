@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FiChevronsLeft } from 'react-icons/fi';
 
 import {
@@ -13,10 +14,10 @@ const ChooseRegister: React.FC = () => {
   return (
     <Container>
       <Header>
-        <a href="/">
+        <Link to="/">
           <FiChevronsLeft size={32} />
           Voltar
-        </a>
+        </Link>
 
         <h1>Escolha a forma de cadastro</h1>
       </Header>

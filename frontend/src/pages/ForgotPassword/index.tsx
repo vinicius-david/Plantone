@@ -1,6 +1,6 @@
 import React, { useCallback, useRef } from 'react';
+import { FiChevronLeft, FiMail } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
-import { FiChevronsRight, FiMail, FiLock } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
@@ -11,15 +11,14 @@ import getValidationErrors from '../../utils/getValidationErrors';
 
 import { Background, Container, Header } from './styles';
 
-interface LogInFormData {
+interface ForgotPasswordFormData {
   email: string;
-  password: string;
 }
 
-const LogIn: React.FC = () => {
+const ForgotPassword: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
-  const handleSubmit = useCallback(async (data: LogInFormData) => {
+  const handleSubmit = useCallback(async (data: ForgotPasswordFormData) => {
     try {
       formRef.current?.setErrors({});
 
@@ -27,7 +26,6 @@ const LogIn: React.FC = () => {
         email: Yup.string()
           .email('Email inválido')
           .required('Campo obrigatório'),
-        password: Yup.string().required('Campo obrigatória'),
       });
 
       await schema.validate(data, {
@@ -49,26 +47,16 @@ const LogIn: React.FC = () => {
         </Header>
 
         <Form ref={formRef} onSubmit={handleSubmit}>
-          <h2>Faça seu login</h2>
+          <h2>Recuperação de senha</h2>
 
           <h4>Email</h4>
           <Input name="email" icon={FiMail} placeholder="Digite seu email" />
 
-          <h4>Senha</h4>
-          <Input
-            name="password"
-            icon={FiLock}
-            type="password"
-            placeholder="Digite sua senha"
-          />
+          <Button type="submit">Recuperar</Button>
 
-          <Button type="submit">Entrar</Button>
-
-          <Link to="/forgot-password">Esqueceu a senha?</Link>
-
-          <Link to="/choose-register">
-            <FiChevronsRight size={24} />
-            Cadastre-se
+          <Link to="/">
+            <FiChevronLeft size={24} />
+            Voltar para o login
           </Link>
         </Form>
       </Container>
@@ -78,4 +66,4 @@ const LogIn: React.FC = () => {
   );
 };
 
-export default LogIn;
+export default ForgotPassword;

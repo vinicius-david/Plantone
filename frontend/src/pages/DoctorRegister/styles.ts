@@ -53,22 +53,35 @@ export const Header = styled.div`
 `;
 
 export const InputsContainer = styled.div`
-  width: 20vw;
-  display: flex;
-  flex-direction: column;
-  align-items: left;
+  width: 740px;
+  max-height: 700px;
 
   animation: ${animateOpacity} 0.8s;
 
   form {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+
+    height: 60%;
+    width: 740px;
+
+    margin-top: 32px;
+
     h4 {
       font-size: 22px;
       margin-bottom: 8px;
-      margin-top: 24px;
+      margin-top: 16px;
+      max-width: 370px;
+    }
+
+    div {
+      max-width: 300px;
     }
 
     button {
-      margin-top: 24px;
+      max-width: 300px;
+      margin-top: 156px;
     }
   }
 `;
