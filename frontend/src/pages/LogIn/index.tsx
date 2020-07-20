@@ -5,6 +5,7 @@ import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 
+import { useAuth } from '../../hooks/auth';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import getValidationErrors from '../../utils/getValidationErrors';
@@ -19,26 +20,36 @@ interface LogInFormData {
 const LogIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
-  const handleSubmit = useCallback(async (data: LogInFormData) => {
-    try {
-      formRef.current?.setErrors({});
+  const { logIn } = useAuth();
 
-      const schema = Yup.object().shape({
-        email: Yup.string()
-          .email('Email inválido')
-          .required('Campo obrigatório'),
-        password: Yup.string().required('Campo obrigatória'),
-      });
+  const handleSubmit = useCallback(
+    async (data: LogInFormData) => {
+      try {
+        formRef.current?.setErrors({});
 
-      await schema.validate(data, {
-        abortEarly: false,
-      });
-    } catch (err) {
-      const errors = getValidationErrors(err);
+        const schema = Yup.object().shape({
+          email: Yup.string()
+            .email('Email inválido')
+            .required('Campo obrigatório'),
+          password: Yup.string().required('Campo obrigatória'),
+        });
 
-      formRef.current?.setErrors(errors);
-    }
-  }, []);
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+
+        logIn({
+          email: data.email,
+          password: data.password,
+        });
+      } catch (err) {
+        const errors = getValidationErrors(err);
+
+        formRef.current?.setErrors(errors);
+      }
+    },
+    [logIn],
+  );
 
   return (
     <>
