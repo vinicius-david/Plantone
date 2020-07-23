@@ -12,9 +12,11 @@ import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 
+import { useToast } from '../../hooks/toast';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import getValidationErrors from '../../utils/getValidationErrors';
+import api from '../../services/api';
 
 import { Container, Header, InputsContainer } from './styles';
 
@@ -30,33 +32,56 @@ interface DoctorRegisterFormData {
 const DoctorRegister: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
-  const handleSubmit = useCallback(async (data: DoctorRegisterFormData) => {
-    try {
-      formRef.current?.setErrors({});
+  const { addToast } = useToast();
 
-      const schema = Yup.object().shape({
-        name: Yup.string().required('Campo obrigatório'),
-        email: Yup.string()
-          .email('Email inválido')
-          .required('Campo obrigatório'),
-        password: Yup.string().required('Campo obrigatório'),
-        password_confirmation: Yup.string().oneOf(
-          [Yup.ref('password'), undefined],
-          'Senhas diferentes',
-        ),
-        phone: Yup.string().required('Campo obrigatório'),
-        specialty: Yup.string().required('Campo obrigatório'),
-      });
+  const handleSubmit = useCallback(
+    async (data: DoctorRegisterFormData) => {
+      try {
+        formRef.current?.setErrors({});
 
-      await schema.validate(data, {
-        abortEarly: false,
-      });
-    } catch (err) {
-      const errors = getValidationErrors(err);
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Campo obrigatório'),
+          email: Yup.string()
+            .email('Email inválido')
+            .required('Campo obrigatório'),
+          password: Yup.string().required('Campo obrigatório'),
+          password_confirmation: Yup.string().oneOf(
+            [Yup.ref('password'), undefined],
+            'Senhas diferentes',
+          ),
+          phone: Yup.string().required('Campo obrigatório'),
+          specialty: Yup.string().required('Campo obrigatório'),
+        });
 
-      formRef.current?.setErrors(errors);
-    }
-  }, []);
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+
+        await api.post('/doctor', {
+          data,
+        });
+
+        addToast({
+          type: 'success',
+          title: 'Cadastro realizado',
+          description: 'Você ja pode fazer seu login!.',
+        });
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+          formRef.current?.setErrors(errors);
+
+          return;
+        }
+        addToast({
+          type: 'error',
+          title: 'Erro no cadastro',
+          description: 'Não foi possível realizar o cadastro, tente novamente.',
+        });
+      }
+    },
+    [addToast],
+  );
 
   return (
     <Container>

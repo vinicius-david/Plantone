@@ -13,17 +13,19 @@ import api from '../../services/api';
 
 import { Background, Container, Header } from './styles';
 
-interface ForgotPasswordFormData {
+interface ResetPasswordFormData {
   email: string;
+  password: string;
+  password_confirmation: string;
 }
 
-const ForgotPassword: React.FC = () => {
+const ResetPassword: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
   const { addToast } = useToast();
 
   const handleSubmit = useCallback(
-    async (data: ForgotPasswordFormData) => {
+    async (data: ResetPasswordFormData) => {
       try {
         formRef.current?.setErrors({});
 
@@ -31,21 +33,25 @@ const ForgotPassword: React.FC = () => {
           email: Yup.string()
             .email('Email inválido')
             .required('Campo obrigatório'),
+          password: Yup.string().required('Campo obrigatório'),
+          password_confirmation: Yup.string().oneOf(
+            [Yup.ref('password'), undefined],
+            'Senhas diferentes',
+          ),
         });
 
         await schema.validate(data, {
           abortEarly: false,
         });
 
-        await api.post('forgot-password', {
+        await api.post('reset-password', {
           data,
         });
 
         addToast({
           type: 'success',
-          title: 'Email de recuperação de senha enviado!',
-          description:
-            'Verifique sua caixa de entrada para definir uma nova senha.',
+          title: 'Senha redefinida!',
+          description: 'Você já pode realizar o login!',
         });
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -56,9 +62,8 @@ const ForgotPassword: React.FC = () => {
         }
         addToast({
           type: 'error',
-          title: 'Erro na recuperação de senha',
-          description:
-            'Não foi possível fazer a recuperação de senha, tente novamente.',
+          title: 'Erro ao redefinir a senha',
+          description: 'Não foi possível redefinir sua senha, tente novamente.',
         });
       }
     },
@@ -74,10 +79,20 @@ const ForgotPassword: React.FC = () => {
         </Header>
 
         <Form ref={formRef} onSubmit={handleSubmit}>
-          <h2>Recuperação de senha</h2>
+          <h2>Resetar senha</h2>
 
           <h4>Email</h4>
           <Input name="email" icon={FiMail} placeholder="Digite seu email" />
+
+          <h4>Nova Senha</h4>
+          <Input name="password" icon={FiMail} placeholder="Nova senha" />
+
+          <h4>Confirmar senha</h4>
+          <Input
+            name="password_confirmation"
+            icon={FiMail}
+            placeholder="Repetir senha"
+          />
 
           <Button type="submit">Recuperar</Button>
 
@@ -93,4 +108,4 @@ const ForgotPassword: React.FC = () => {
   );
 };
 
-export default ForgotPassword;
+export default ResetPassword;

@@ -20,11 +20,13 @@ import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import axios from 'axios';
 
+import { useToast } from '../../hooks/toast';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import getValidationErrors from '../../utils/getValidationErrors';
 
 import { Container, Header, FormContainer, Select } from './styles';
+import api from '../../services/api';
 
 interface IBGEUF {
   sigla: string;
@@ -46,6 +48,8 @@ interface HospitalRegisterFormData {
 
 const HospitalRegister: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+
+  const { addToast } = useToast();
 
   const [ufs, setUfs] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
@@ -129,13 +133,37 @@ const HospitalRegister: React.FC = () => {
         await schema.validate(data, {
           abortEarly: false,
         });
-      } catch (err) {
-        const errors = getValidationErrors(err);
 
-        formRef.current?.setErrors(errors);
+        const formData = {
+          ...data,
+          uf: selectedUf,
+          city: selectedCity,
+        };
+
+        await api.post('/hospital', {
+          formData,
+        });
+
+        addToast({
+          type: 'success',
+          title: 'Cadastro realizado',
+          description: 'Você ja pode fazer seu login!.',
+        });
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+          formRef.current?.setErrors(errors);
+
+          return;
+        }
+        addToast({
+          type: 'error',
+          title: 'Erro no cadastro',
+          description: 'Não foi possível realizar o cadastro, tente novamente.',
+        });
       }
     },
-    [selectedUf, selectedCity],
+    [selectedUf, selectedCity, addToast],
   );
 
   return (
